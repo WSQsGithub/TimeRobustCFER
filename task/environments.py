@@ -1,16 +1,5 @@
 # %%
-from typing import Optional, Tuple
-import numpy as np
-import gym
-from gym import spaces
-import matplotlib
-matplotlib.use('TkAgg')
-import matplotlib.pyplot as plt
-from matplotlib import patches
-from matplotlib.patches import Arrow
-from random import random
-import copy
-
+from utils import *
 
 class GridWorldEnv(gym.Env):
     metadata = {'render.modes': ['human']}
@@ -146,8 +135,8 @@ class GridWorldEnv(gym.Env):
         
         if (np.min(state)<=0 or np.max(state)>=1):
             return 1
-        if (self.obstacle is not None):
-            for obs in self.obstacle:
+        if (self.obstacles is not None):
+            for obs in self.obstacles:
                 obs_x, obs_y, obs_width, obs_height = obs
                 obs_top = obs_y + obs_height
                 obs_right = obs_x + obs_width
@@ -155,6 +144,7 @@ class GridWorldEnv(gym.Env):
                 if obs_x <= x <= obs_right and obs_y <= y <= obs_top:
                     return 1
         return 0
+
 
 
     
