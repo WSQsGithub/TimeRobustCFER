@@ -1,23 +1,52 @@
-# 初始粒子
-initial_particles = np.linspace(-10, 10, 1000)
+# # % test the environment
+# # ['stay', 'N', 'S', 'W', 'E', 'NW', 'SW', 'NE', 'SE']
+# agent.resetState()
 
-# 创建粒子滤波器实例
-pf = ParticleFilter(initial_particles, state_update, measurement_update, N=100)
+# print('-------------------------------------------------------------------------')
+# agent.task.updateFlag(task.sat4Pred([0.65,0.35]), agent.task.flag)
+# print(">> state = ", agent.getState())
 
-# 模拟一些测量数据
-measurements = np.random.normal(0, 1, size=50)
+# action = 5
+# state, _, done, info = agent.env.step(action)
+# agent.task.updateFlag(task.sat4Pred(state), agent.task.flag)
+# print(">> state = ", agent.getState(), ", reward = ", agent.task.getReward(agent.task.g))
 
-# 使用粒子滤波器估计状态
-estimates = []
-for measurement in measurements:
-    pf.predict()
-    pf.update(measurement)
-    pf.resample()
-    estimates.append(pf.estimate())
+# action = 5
+# state, _, done, info = agent.env.step(action)
+# agent.task.updateFlag(task.sat4Pred(state), agent.task.flag)
+# print(">> state = ", agent.getState(), ", reward = ", agent.task.getReward(agent.task.g))
 
-# 绘制结果
-plt.plot(measurements, label='Measurements')
-plt.plot(estimates, label='Estimates')
-plt.legend()
-plt.show()
+# action = 5
+# state, _, done, info = agent.env.step(action)
+# agent.task.updateFlag(task.sat4Pred(state), agent.task.flag)
+# print(">> state = ", agent.getState(), ", reward = ", agent.task.getReward(agent.task.g))
 
+# action = 8
+# state, _, done, info = agent.env.step(action)
+# agent.task.updateFlag(task.sat4Pred(state), agent.task.flag)
+# print(">> state = ", agent.getState(), ", reward = ", agent.task.getReward(agent.task.g))
+
+# action = 8
+# state, _, done, info = agent.env.step(action)
+# agent.task.updateFlag(task.sat4Pred(state), agent.task.flag)
+# print(">> state = ", agent.getState(), ", reward = ", agent.task.getReward(agent.task.g))
+
+# action = 8
+# state, _, done, info = agent.env.step(action)
+# agent.task.updateFlag(task.sat4Pred(state), agent.task.flag)
+# print(">> state = ", agent.getState(), ", reward = ", agent.task.getReward(agent.task.g))
+
+# action = 5
+# state, _, done, info = agent.env.step(action)
+# agent.task.updateFlag(task.sat4Pred(state), agent.task.flag)
+# print(">> state = ", agent.getState(), ", reward = ", agent.task.getReward(agent.task.g))
+
+# action = 5
+# state, _, done, info = agent.env.step(action)
+# agent.task.updateFlag(task.sat4Pred(state), agent.task.flag)
+# print(">> state = ", agent.getState(), ", reward = ", agent.task.getReward(agent.task.g))
+
+# action = 5
+# state, _, done, info = agent.env.step(action)
+# agent.task.updateFlag(task.sat4Pred(state), agent.task.flag)
+# print(">> state = ", agent.getState(), ", reward = ", agent.task.getReward(agent.task.g))

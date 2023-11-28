@@ -1,7 +1,5 @@
 import math
 import numpy as np
-
-import numpy as np
 from tqdm import tqdm
 import random
 import pandas as pd
@@ -9,6 +7,7 @@ from torch.utils.tensorboard import SummaryWriter
 import math
 from collections import namedtuple, deque
 import pickle
+import scipy.io
 from tabulate import tabulate
 
 from typing import Optional, Tuple
@@ -97,7 +96,7 @@ class QTable:
             self.q_table = {}
 
     def get_q_value(self, state, action):
-        """ 从Q-table中获取Q值，如果不存在则初始化为0 """
+        """ 从Q-table中获取Q值, 如果不存在则初始化为0 """
         # 将连续状态转换为字符串键
         state_key = self.state_to_key(state)
         return self.q_table.get((state_key, action), 0.0)
@@ -109,7 +108,7 @@ class QTable:
         self.q_table[(state_key, action)] = value
         
     def show_q_table(self, n):
-        """ 使用tabulate显示Q-table的前n条记录，每行显示一个状态下的不同动作的Q-value值 """
+        """ 使用tabulate显示Q-table的前n条记录, 每行显示一个状态下的不同动作的Q-value值 """
         states = set(key[0] for key in self.q_table.keys())
         data = []
 
@@ -124,14 +123,15 @@ class QTable:
 
     def state_to_key(self, state):
         """ 将连续状态转换为字符串键 """
-        return str(state)
+        return str(np.array(state))
     
     def update(self, experience, lr, gamma):
+        # print(experience)
         state, action, reward, next_state, _ = experience
 
         current_q = self.get_q_value(state, action)
         max_next_q = max([self.get_q_value(next_state, a) for a in self.actions])
-        new_q = (1 - lr) * current_q + lr * (reward + gamma * max_next_q)
+        new_q =  current_q + lr * (reward + gamma * max_next_q - current_q)
         self.set_q_value(state, action, new_q)
 
     def save(self, filename):
@@ -145,3 +145,33 @@ class QTable:
         with open(filename, 'rb') as file:
             self.q_table = pickle.load(file)
             print(f"Q-table loaded from {filename}.")
+
+
+def smooth_array(arr, window_size):
+    window = np.ones(window_size) / window_size
+    smoothed_arr = np.convolve(arr, window, mode='valid')
+    return smoothed_arr
+
+
+
+def smoothData(arr, window_size):
+    # pad the missing signal
+    padding = np.full(window_size-1, 0)
+    padded_arr = np.concatenate([padding, arr])
+    
+    rolling_mean = smooth_array(padded_arr, window_size)
+    rolling_std = np.std([padded_arr[i:i+window_size] for i in range(len(padded_arr)-window_size+1)], axis=1)
+    
+    lower_bounds = [avg - std for avg, std in zip(rolling_mean, rolling_std)]
+    upper_bounds = [avg + std for avg, std in zip(rolling_mean, rolling_std)]
+    
+    return rolling_mean, lower_bounds, upper_bounds
+
+
+
+def curveData(arr, window_size):
+    rolling_mean = np.average([arr[i*window_size:(i+1)*window_size] for i in range(int(round(len(arr)/window_size))-1)],axis=1)
+    rolling_std = np.std([arr[i*window_size:(i+1)*window_size] for i in range(int(round(len(arr)/window_size))-1)],axis=1)
+    lower_bounds = [avg - std for avg, std in zip(rolling_mean, rolling_std)]
+    upper_bounds = [avg + std for avg, std in zip(rolling_mean, rolling_std)]
+    return rolling_mean, lower_bounds, upper_bounds

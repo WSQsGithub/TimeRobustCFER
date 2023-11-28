@@ -10,8 +10,8 @@ class GridWorldEnv(gym.Env):
         self.goals = config['goals']
         self.obstacles = config['obstacles'] 
         self.prob_right = config['prob_right']
-        self.beta = config['beta'] 
-        self.scale = config['scale']
+
+        self.state0 = config["state0"]
         
         
         self.action = ['stay', 'N', 'S', 'W', 'E', 'NW', 'SW', 'NE', 'SE']
@@ -40,7 +40,8 @@ class GridWorldEnv(gym.Env):
         self.action_space = spaces.Discrete(9)
         # Observation space consists of position (px, py) and orientation (theta) for each robot.
         self.observation_space = spaces.MultiDiscrete([self.gridsize, self.gridsize])
-        self.state = np.array([0,0])
+        
+        self.state = self.state0
                 
         
     
@@ -49,7 +50,7 @@ class GridWorldEnv(gym.Env):
             self.state = state
         else:
         # Reset the state of the environment to an initial state for each robot
-            self.state = np.array([0,0]) # All robots start at the origin, facing right
+            self.state = self.state0 # All robots start at the origin, facing right
         return self.state
     
     
@@ -85,16 +86,16 @@ class GridWorldEnv(gym.Env):
         fig, ax = plt.subplots(figsize=(5,5))
         
         # plot grid
-        for i in range(self.grid_size+1):
+        for i in range(self.gridsize+1):
             ax.axhline(y=i*self.dgrid, color='black', linewidth=0.5)
             ax.axvline(x=i*self.dgrid, color='black', linewidth=0.5)
             
-        # plot region
-        for i in range(len(self.region)):
-            left = self.region[i,0]
-            bottom = self.region[i,1]
-            width = self.region[i,2]
-            height = self.region[i,3]
+        # plot goals
+        for i in range(len(self.goals)):
+            left = self.goals[i,0]
+            bottom = self.goals[i,1]
+            width = self.goals[i,2]
+            height = self.goals[i,3]
             rect = patches.Rectangle((left, bottom), width, height, facecolor=self.color[i])
             ax.add_patch(rect)
             
@@ -102,12 +103,12 @@ class GridWorldEnv(gym.Env):
         ax.set_ylabel('Y', fontsize=12)
         
         # plot obstacles
-        if self.obstacle is not None:
-            for i in range(len(self.obstacle)):
-                left = self.obstacle[i,0]
-                bottom = self.obstacle[i,1]
-                width = self.obstacle[i,2]
-                height = self.obstacle[i,3]
+        if self.obstacles is not None:
+            for i in range(len(self.obstacles)):
+                left = self.obstacles[i,0]
+                bottom = self.obstacles[i,1]
+                width = self.obstacles[i,2]
+                height = self.obstacles[i,3]
                 rect = patches.Rectangle((left, bottom), width, height, facecolor='gray')
                 ax.add_patch(rect)
             
@@ -121,6 +122,7 @@ class GridWorldEnv(gym.Env):
             plt.show(block=False)
             return
         else:
+            trajectory = np.concatenate([[self.state0],trajectory])
             start_point = trajectory[0]
             plt.plot(trajectory[:, 0], trajectory[:, 1], linewidth=4)
             plt.scatter(trajectory[:, 0], trajectory[:,1], marker='.', s=200, label='Start')
@@ -131,7 +133,7 @@ class GridWorldEnv(gym.Env):
     
         
     def checkCollision(self,state)-> int:
-        # print(state,state - self.obstacle[:,0:1])
+        # print(state,state - self.obstacles[:,0:1])
         
         if (np.min(state)<=0 or np.max(state)>=1):
             return 1
@@ -146,7 +148,19 @@ class GridWorldEnv(gym.Env):
         return 0
 
 
+class UnicycleEnv(gym.Env):
+    metadata = {'render.modes': ['human']}
+    def __init__(self, config):
+        super(UnicycleEnv, self).__init__()
 
+    def reset(self, state):
+        if not state is None:
+            self.state = state
+        else:
+        # Reset the state of the environment to an initial state for each robot
+            self.state = np.zeros(self.observation_space.shape) # All robots start at the origin, facing right
+        return self.state
+    
     
 class MultiUnicycleEnv(gym.Env):
     metadata = {'render.modes': ['human']}
@@ -230,7 +244,7 @@ class MultiUnicycleEnv(gym.Env):
         if state[1] >= self.height:
             return True
 
-    def render(self, mode='human', close=False):
+    def render(self, mode='human', close=True):
         if self.state is None:
             return None
 
