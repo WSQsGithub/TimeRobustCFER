@@ -1,4 +1,4 @@
-# Tractable Reinforcement Learning for Signal Temporal Logic Tasks with Counterfactual Experience Replay
+# Temporally-Robust Policy Synthesis via Reinforcement Learning for Signal Temporal Logic Tasks with Counterfactual Experience Replay
 
 ## Abstract
 
