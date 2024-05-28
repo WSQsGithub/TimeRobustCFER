@@ -1,0 +1,102 @@
+{
+    "reaching01": {
+        "m": "parameters for reaching tasks",
+        "MAX_EPISODE": 4000,
+        "CHECK_INTERVAL": 50,
+        "EPS": [
+            0.99,
+            0.01,
+            400
+        ],
+        "LR": [
+            0.01,
+            0.01,
+            300
+        ],
+        "buffer_size": 1000,
+        "replay_period": 4,
+        "batch_size": 64,
+        "n_test": 500,
+        "GAMMA": 0.999
+    },
+    "charging01": {
+        "m": "parameters for reaching tasks",
+        "MAX_EPISODE": 4000,
+        "CHECK_INTERVAL": 50,
+        "EPS": [
+            0.99,
+            0.01,
+            400
+        ],
+        "LR": [
+            0.01,
+            0.01,
+            300
+        ],
+        "buffer_size": 1000,
+        "replay_period": 4,
+        "batch_size": 64,
+        "n_test": 500,
+        "GAMMA": 0.999
+    },
+    "charging02": {
+        "m": "parameters for charging tasks when delta is larger",
+        "MAX_EPISODE": 10000,
+        "CHECK_INTERVAL": 50,
+        "EPS": [
+            0.99,
+            0.01,
+            1000
+        ],
+        "LR": [
+            0.01,
+            0.01,
+            300
+        ],
+        "buffer_size": 1000,
+        "replay_period": 4,
+        "batch_size": 64,
+        "n_test": 500,
+        "GAMMA": 0.999
+    },
+    "patrolling01": {
+        "m": "parameters for patrolling tasks",
+        "MAX_EPISODE": 4000,
+        "CHECK_INTERVAL": 50,
+        "EPS": [
+            0.99,
+            0.01,
+            400
+        ],
+        "LR": [
+            0.01,
+            0.01,
+            300
+        ],
+        "buffer_size": 1000,
+        "replay_period": 4,
+        "batch_size": 64,
+        "n_test": 500,
+        "GAMMA": 0.999
+    },
+    "patrolling02": {
+        "m": "parameters for patrolling tasks",
+        "MAX_EPISODE": 10000,
+        "CHECK_INTERVAL": 50,
+        "EPS": [
+            0.99,
+            0.01,
+            1000
+        ],
+        "LR": [
+            0.01,
+            0.01,
+            300
+        ],
+        "buffer_size": 10000,
+        "replay_period": 4,
+        "batch_size": 256,
+        "n_test": 500,
+        "GAMMA": 0.999
+    }
+}
